@@ -1,4 +1,4 @@
-package octaladecimal.cup;
+package binarioadecimal.cup;
 import java_cup.runtime.Symbol;
  parser code 
 {:
@@ -31,19 +31,28 @@ import java_cup.runtime.Symbol;
 
 action code
 {:
-private static final int CONVERTIDOR=8;
+private static final int CONVERTIDOR=2;
 :}
 
 
 
 
-/* Terminals (tokens returned by the scanner). */
-terminal String    OCTAL, ERROR;  
+/* Terminals*/
+terminal PUNTO;
+terminal String    BIN, ERROR;  
+
 /* Non-terminals */
-non terminal            Inicio,Octales,Octal;
+non terminal            Inicio,Binario,E,D,Bin;
 
 start with Inicio;
-Inicio::= Octales:ocs {:System.out.println("El Numero Decimal Es "+ocs);:};
-Octales::= Octales:ocs Octal:oc {:RESULT=(Integer)ocs*CONVERTIDOR+(Integer)oc;:}
-            |Octal:oc    {:RESULT=(Integer)oc;:};
-Octal::= OCTAL:oc{:RESULT=Integer.parseInt(oc);:};
+Inicio::= Binario:bi {:System.out.println("El Numero Decimal Es "+bi);:};
+
+Binario::= E:e PUNTO D:d {:RESULT=(Float)e+(Float)d;:}
+        |E:e    {:RESULT=(Float)e;:};
+E::= E:e Bin:b      {:RESULT=(Float)e*CONVERTIDOR+(Float)b;:}
+    |Bin:b          {:RESULT=(Float)(b);:};
+
+D::= Bin:b D:d      {:RESULT=(Float)d/CONVERTIDOR+(Float)b/CONVERTIDOR;:}
+    |Bin:b          {:RESULT=(Float)(b)/CONVERTIDOR;:};
+
+Bin::= BIN:b{:RESULT=Float.parseFloat(b);:};
